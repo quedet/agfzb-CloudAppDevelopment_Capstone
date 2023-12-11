@@ -40,7 +40,7 @@
                         <input type="text"name="username" class="col form-control" placeholder="Username">
                         <input type="password" name="password" class="col form-control" placeholder="Password">
                         <button type="submit" class="col btn btn-primary">Login</button>
-                        <li class="nav-item"><a class="nav-link" href="#">Signup</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'djangoapp:registration' %}">Signup</a></li>
                     </form>
                     {% endif %}
                   </ul>

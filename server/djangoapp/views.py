@@ -34,7 +34,7 @@ def login_request(request):
     user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
     if user is not None:
         login(request, user)
-        return HttpResponseRedirect('djangoapp:index')
+        return HttpResponseRedirect(reverse('djangoapp:index'))
     return redirect('djangoapp:index')
 
 # Create a `logout_request` view to handle sign out request
@@ -44,8 +44,26 @@ def logout_request(request):
     return redirect('djangoapp:index')
 
 # Create a `registration_request` view to handle sign up request
-# def registration_request(request):
-# ...
+def registration_request(request):
+    if request.method == 'GET':
+        return render(request, "djangoapp/registration.html")
+    elif request.method == 'POST':
+        username = request.POST['username']
+        firstname = request.POST['first_name']
+        lastname = request.POST['last_name']
+        password = request.POST['password']
+
+        try:
+            User.objects.get(username=username)
+            
+            return render(request, "djangoapp/registration.html")
+        except User.DoesNotExist:
+            user = User.objects.create_user(username=username, 
+                first_name=firstname, 
+                last_name=lastname, 
+                password=password
+            )
+            return redirect('djangoapp:index')
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
