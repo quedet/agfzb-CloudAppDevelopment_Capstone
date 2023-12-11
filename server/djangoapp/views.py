@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, redirect, reverse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
@@ -9,6 +9,9 @@ from django.contrib import messages
 from datetime import datetime
 import logging
 import json
+
+from django.contrib.auth import login, login, authenticate
+from django.views.decorators.http import require_POST
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -27,12 +30,18 @@ def contact(request):
     return render(request, "contact.html")
 
 # Create a `login_request` view to handle sign in request
-# def login_request(request):
-# ...
+def login_request(request):
+    user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+    if user is not None:
+        login(request, user)
+        return HttpResponseRedirect('djangoapp:index')
+    return redirect('djangoapp:index')
 
 # Create a `logout_request` view to handle sign out request
-# def logout_request(request):
-# ...
+@require_POST
+def logout_request(request):
+    logout(request)
+    return redirect('djangoapp:index')
 
 # Create a `registration_request` view to handle sign up request
 # def registration_request(request):
